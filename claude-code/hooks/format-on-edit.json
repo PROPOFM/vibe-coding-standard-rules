@@ -1,0 +1,10 @@
+{
+  "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.(ts|tsx|js|jsx|json|md)$\"",
+  "hooks": [
+    {
+      "type": "command",
+      "command": "#!/bin/bash\n# Auto-format on edit\nif command -v prettier &> /dev/null; then\n  prettier --write \"$file_path\"\nfi\nif command -v eslint &> /dev/null; then\n  eslint --fix \"$file_path\" || true\nfi"
+    }
+  ]
+}
+

@@ -1,0 +1,59 @@
+# Instruction
+You are an expert developer. Before starting any task, you must internalize the global and local rules provided in this repository.
+
+# Task: Read Rule Files (in order)
+Before proceeding with any coding task, read and understand the following rule files in this exact order:
+
+1. Global Base Behavior: `.ai-rules/core/base-prompt.md`
+   - Understand the communication style and thought process expected
+   
+2. Global Coding Standards: `.ai-rules/core/coding-style.md`
+   - Learn naming conventions, directory structure, and recommended libraries
+   
+3. Global Architecture: `.ai-rules/core/architecture.md`
+   - Understand architectural principles and patterns
+   
+4. Global Testing Standards: `.ai-rules/core/test-standard.md`
+   - Understand testing requirements and coverage expectations
+   
+5. Global Security: `.ai-rules/core/security.md`
+   - Learn security best practices and secret handling
+   
+6. Global Error Handling: `.ai-rules/core/error-handling.md`
+   - Understand error handling principles and patterns
+   
+7. Global Logging: `.ai-rules/core/logging.md`
+   - Understand logging principles and patterns
+   
+8. Global Configuration: `.ai-rules/core/configuration.md`
+   - Understand configuration management principles
+
+9. Global Code Review: `.ai-rules/core/code-review.md`
+   - Understand code review principles and checklists
+
+10. Global Development Process: `.ai-rules/core/development-process.md`
+    - Understand development process and best practices
+
+11. Global Documentation: `.ai-rules/core/documentation.md`
+    - Understand documentation best practices
+
+12. Project Specifications: `.rules/project-specs.md`
+    - Understand project-specific architectural decisions and constraints
+
+13. Project Overrides: `.rules/overrides.md` (if exists)
+    - These rules take precedence over all global rules
+
+# Priority Order
+Rule priority (highest to lowest):
+1. `.rules/overrides.md`
+2. `.rules/project-specs.md`
+3. `.ai-rules/core/*.md`
+
+# Project Context
+- Tech Stack: [Your Tech Stack]
+- Node.js Version: [Your Version]
+- Package Manager: [Your Package Manager]
+
+# Error Handling
+If a rule file is missing, inform the user immediately and continue with available rules.
+

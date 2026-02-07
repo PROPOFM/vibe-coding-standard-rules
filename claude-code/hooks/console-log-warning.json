@@ -1,0 +1,10 @@
+{
+  "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.(ts|tsx|js|jsx)$\"",
+  "hooks": [
+    {
+      "type": "command",
+      "command": "#!/bin/bash\n# Warn about console.log in code\nif grep -n 'console\\.log' \"$file_path\" 2>/dev/null; then\n  echo '[Hook] Warning: console.log found in $file_path. Remove before committing.' >&2\n  echo '[Hook] Consider using proper logging instead.' >&2\nfi"
+    }
+  ]
+}
+

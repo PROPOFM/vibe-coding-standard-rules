@@ -1,0 +1,41 @@
+# AI Coding Rules for This Project
+
+## 1. Core Standards (Global)
+Always adhere to the global coding standards and base behavior defined in the following files. 
+You must read these to understand the foundational rules of this organization:
+- .ai-rules/core/base-prompt.md
+- .ai-rules/core/coding-style.md
+- .ai-rules/core/architecture.md
+- .ai-rules/core/test-standard.md
+- .ai-rules/core/security.md
+- .ai-rules/core/error-handling.md
+- .ai-rules/core/logging.md
+- .ai-rules/core/configuration.md
+- .ai-rules/core/code-review.md
+- .ai-rules/core/development-process.md
+- .ai-rules/core/documentation.md
+
+## 2. Cursor Skills
+Available skills are automatically detected from:
+- `.cursor/skills/` (project-level)
+- `~/.cursor/skills/` (user-level, global)
+
+Use skills when appropriate. Type `/` in Agent chat to see available skills.
+
+## 3. Project Specific Rules (Local)
+For logic specific to this repository, prioritize the rules in:
+- .rules/project-specs.md
+- .rules/overrides.md
+
+**Priority**: If there is a conflict, `.rules/overrides.md` > `.rules/project-specs.md` > `.ai-rules/core/*.md`
+
+## 4. Development Context
+- Primary Tech Stack: [Your Tech Stack]
+- Environment: [Your Environment]
+- Package Manager: [Your Package Manager]
+- Code Style: [Your Code Style Tools]
+
+## 5. Error Handling
+If any referenced rule file is missing, inform the user and continue with available rules.
+Do not fail silently - always mention when a rule file cannot be found.
+
