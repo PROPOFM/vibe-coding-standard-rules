@@ -163,6 +163,130 @@ async function processTransaction(
 }
 ```
 
+## MCP (Model Context Protocol) 設定の管理
+
+### MCP設定の基本方針
+
+**🚨 重要な原則：秘密情報や個別情報は設定ファイルに含めない**
+
+**MCP設定ファイル（`.cursor/mcp.json`、`~/.claude.json`）には以下を含めない**:
+- ❌ プロジェクトID（環境変数から動的に生成）
+- ❌ API Keys（Anon Key、Service Role Key）
+- ❌ Access Token
+- ❌ その他の認証情報
+
+**✅ 設定ファイルには以下を含める**:
+- ✅ 設定の構造（テンプレート）
+- ✅ 環境変数参照の方法
+- ✅ 設定生成スクリプトへの参照
+
+### MCP設定の管理方法
+
+**1. 環境変数ベースの一元管理**
+
+**ローカル開発環境**:
+- `.env`ファイルで環境変数を管理
+- `.gitignore`に含まれているため、Gitにコミットされない
+
+**CI/CD環境**:
+- GitHub Secretsで環境変数を管理
+- Cloud Build Secretsで環境変数を管理
+
+**2. 設定ファイルの自動生成**
+
+環境変数から設定ファイルを自動生成するスクリプトを使用：
+
+```bash
+# 環境変数からMCP設定を生成
+npm run mcp:generate
+```
+
+このスクリプトは以下を生成：
+- `.cursor/mcp.json` - Cursor用MCP設定
+- `docs/setup/claude-code-mcp-config.json` - Claude Code用設定テンプレート
+
+**3. MCP設定ファイルの構造**
+
+**Cursor設定（`.cursor/mcp.json`）**:
+```json
+{
+  "mcpServers": {
+    "supabase-dev": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=${SUPABASE_DEV_PROJECT_ID}&read_only=false"
+    },
+    "supabase-prod": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=${SUPABASE_PROD_PROJECT_ID}&read_only=true"
+    }
+  }
+}
+```
+
+**Claude Code設定（`~/.claude.json`）**:
+```json
+{
+  "mcpServers": {
+    "supabase-dev": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=${SUPABASE_DEV_PROJECT_ID}&read_only=false"
+    },
+    "supabase-prod": {
+      "url": "https://mcp.supabase.com/mcp?project_ref=${SUPABASE_PROD_PROJECT_ID}&read_only=true"
+    }
+  }
+}
+```
+
+**注意**: Claude Codeの設定ファイルでは環境変数の展開は行われません。スクリプトで生成した値を直接使用してください。
+
+### GitHub Secretsでの管理
+
+**設定するGitHub Secrets**:
+
+**開発環境**:
+- `SUPABASE_DEV_PROJECT_ID`
+- `SUPABASE_DEV_URL`
+- `SUPABASE_DEV_ANON_KEY`
+- `SUPABASE_DEV_SERVICE_ROLE_KEY`
+- `SUPABASE_DEV_ACCESS_TOKEN`
+
+**本番環境**:
+- `SUPABASE_PROD_PROJECT_ID`
+- `SUPABASE_PROD_URL`
+- `SUPABASE_PROD_ANON_KEY`
+- `SUPABASE_PROD_SERVICE_ROLE_KEY`
+- `SUPABASE_PROD_ACCESS_TOKEN`
+
+**GitHub Actionsでの使用例**:
+```yaml
+- name: Set up environment variables
+  env:
+    SUPABASE_DEV_PROJECT_ID: ${{ secrets.SUPABASE_DEV_PROJECT_ID }}
+    SUPABASE_PROD_PROJECT_ID: ${{ secrets.SUPABASE_PROD_PROJECT_ID }}
+  run: |
+    echo "SUPABASE_DEV_PROJECT_ID=$SUPABASE_DEV_PROJECT_ID" >> $GITHUB_ENV
+    echo "SUPABASE_PROD_PROJECT_ID=$SUPABASE_PROD_PROJECT_ID" >> $GITHUB_ENV
+
+- name: Generate MCP config
+  run: npm run mcp:generate
+```
+
+### MCP設定の更新手順
+
+**プロジェクトIDが変更された場合**:
+
+1. `.env`ファイルを更新
+2. スクリプトを再実行：
+   ```bash
+   npm run mcp:generate
+   ```
+3. Cursorを再起動
+4. Claude Codeの設定を手動で更新（`~/.claude.json`）
+
+**GitHub Secretsの更新**:
+
+1. GitHubリポジトリのSettings > Secrets and variables > Actionsに移動
+2. 該当するSecretを更新
+3. CI/CDパイプラインが自動的に新しい値を使用
+
 ## 禁止事項
 
 **❌ やってはいけないこと**:
@@ -170,12 +294,16 @@ async function processTransaction(
 - 共通基盤の設定を無視して独自の設定を使用する
 - 環境変数なしで直接Supabaseに接続する
 - 各モジュールで個別にSupabase設定を定義する
+- **MCP設定ファイルに秘密情報や個別情報を含める**
+- **MCP設定ファイルをGitにコミットする（プロジェクト固有の情報を含む場合）**
 
 **✅ 必ずやること**:
 - 共通基盤の設定を参照する
 - 環境変数で設定を上書き可能にする
 - 環境別の設定を自動的に取得する
 - 設定の一元管理を維持する
+- **MCP設定は環境変数から自動生成する**
+- **秘密情報はGitHub Secretsや環境変数で管理する**
 
 ## 例外・特別なケース
 
