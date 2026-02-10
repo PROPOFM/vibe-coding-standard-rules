@@ -10,7 +10,7 @@
 - `rules/`: 常に従うルール（モジュラーに分割）
 - `hooks/`: トリガーベース自動化
 - `mcp-configs/`: MCPサーバー設定
-- `settings-template.json`: Claude Code設定テンプレート（自動実行設定含む）
+- `settings.json`: Claude Codeデフォルト設定（自動実行設定含む、インストールスクリプトで自動適用）
 
 ## セットアップ手順
 
@@ -38,21 +38,15 @@ cp -r claude-code/commands/* ~/.claude/commands/
 cp -r claude-code/rules/* ~/.claude/rules/
 ```
 
-### 2. 設定ファイルの設定
+### 2. 設定ファイルの自動適用
 
-#### `~/.claude/settings.json` の設定
+インストールスクリプトを実行すると、`settings.json`が自動的に`~/.claude/settings.json`にコピーされます。
 
-`settings-template.json`を参考に、`~/.claude/settings.json`を作成または更新します：
+**既存の設定がある場合**:
+- 既存の`~/.claude/settings.json`がある場合は、手動でマージする必要があります
+- バックアップを取ってから上書きするか、`agent`セクションを手動でマージしてください
 
-```bash
-# テンプレートをコピー
-cp claude-code/settings-template.json ~/.claude/settings.json
-
-# または、既存の設定にマージ
-# テンプレートの内容を手動で ~/.claude/settings.json に追加
-```
-
-**重要な設定項目**:
+**重要な設定項目**（デフォルトで有効）:
 
 - `agent.autoExecute: true` - コマンド実行の自動承認（Yolo Mode）
 - `agent.yoloMode: true` - 確認なしで実行

@@ -70,7 +70,7 @@ vibe-coding-standard-rules/
 │   │   └── console-log-warning.json # console.log警告
 │   ├── mcp-configs/                # MCPサーバー設定（テンプレート）
 │   │   └── README.md               # MCP設定の説明
-│   ├── settings-template.json      # Claude Code設定テンプレート（自動実行設定含む）
+│   ├── settings.json               # Claude Codeデフォルト設定（自動実行設定含む）
 │   ├── README.md                    # Claude Code設定の説明
 │   └── .clauderules.base           # Claude Code用のラッパーテンプレート
 ├── cursor/                         # Cursor専用設定
@@ -122,7 +122,7 @@ vibe-coding-standard-rules/
 * **rules/**: 常に従うルール（`~/.claude/rules/`に配置、モジュラーに分割）
 * **hooks/**: トリガーベース自動化（`~/.claude/settings.json`に追加）
 * **mcp-configs/**: MCPサーバー設定（`~/.claude.json`に追加、10個以下に抑える）
-* **settings-template.json**: Claude Code設定テンプレート（自動実行設定、hooks含む）
+* **settings.json**: Claude Codeデフォルト設定（自動実行設定、hooks含む、インストールスクリプトで自動適用）
 
 #### **Cursor対応機能**
 * **skills/**: エージェントスキル（`.cursor/skills/`または`~/.cursor/skills/`に配置、SKILL.md形式）
@@ -131,7 +131,7 @@ vibe-coding-standard-rules/
 ### **推奨デフォルト設定**
 
 #### **Claude Code推奨設定**
-1. **自動実行の有効化**: `settings-template.json`を参考に`~/.claude/settings.json`に`agent.autoExecute: true`を設定
+1. **自動実行の有効化**: インストールスクリプト実行時に`settings.json`が自動的に適用され、`agent.autoExecute: true`が設定されます
 2. **MCPの有効化**: 10個以下に抑える（コンテキストウィンドウの縮小を防ぐ）
 3. **TDD中心**: RED → GREEN → REFACTORサイクル、80%以上のカバレッジを必須
 4. **エージェントのツール制限**: 必要最小限のツールのみ指定（5個程度が最適）
@@ -1000,16 +1000,11 @@ If a rule file is missing, inform the user immediately and continue with availab
 EOF
 ```
 
-#### **4. Claude Code設定ファイルの設定**
+#### **4. Claude Code設定ファイルの自動適用**
 
-`~/.claude/settings.json` を作成または更新します。
+インストールスクリプトを実行すると、`settings.json`が自動的に`~/.claude/settings.json`にコピーされます。
 
-**推奨方法**: `settings-template.json`をコピーして使用：
-
-```bash
-# テンプレートをコピー
-cp .ai-rules/claude-code/settings-template.json ~/.claude/settings.json
-```
+**既存の設定がある場合**: バックアップを取ってから上書きするか、手動でマージしてください。
 
 **手動設定の場合**: 以下の設定を含めます：
 

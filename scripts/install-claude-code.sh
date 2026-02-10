@@ -36,15 +36,19 @@ if [ -d "${SCRIPT_DIR}/claude-code/rules" ]; then
     cp -r "${SCRIPT_DIR}/claude-code/rules"/* "${CLAUDE_HOME}/rules/" 2>/dev/null || true
 fi
 
-# Copy hooks to settings.json (merge, don't overwrite)
-if [ -d "${SCRIPT_DIR}/claude-code/hooks" ]; then
-    echo "📁 Setting up hooks..."
+# Copy settings.json (default configuration with auto-execute)
+if [ -f "${SCRIPT_DIR}/claude-code/settings.json" ]; then
+    echo "📁 Setting up Claude Code settings..."
     if [ ! -f "${CLAUDE_HOME}/settings.json" ]; then
-        echo '{"hooks": []}' > "${CLAUDE_HOME}/settings.json"
+        cp "${SCRIPT_DIR}/claude-code/settings.json" "${CLAUDE_HOME}/settings.json"
+        echo "✅ Created ~/.claude/settings.json with default configuration (auto-execute enabled)"
+    else
+        echo "⚠️  ~/.claude/settings.json already exists"
+        echo "   To use the default configuration, manually merge or backup your existing settings:"
+        echo "   cp ~/.claude/settings.json ~/.claude/settings.json.backup"
+        echo "   cp ${SCRIPT_DIR}/claude-code/settings.json ~/.claude/settings.json"
+        echo "   Or merge the 'agent' section from the template manually"
     fi
-    # Note: Manual merge required for hooks
-    echo "⚠️  Hooks need to be manually added to ~/.claude/settings.json"
-    echo "   See claude-code/hooks/ for hook definitions"
 fi
 
 echo "✅ Claude Code configuration installed!"
