@@ -1,0 +1,28 @@
+{
+  "agent": {
+    "autoExecute": true,
+    "yoloMode": true,
+    "confirmBeforeExecute": false
+  },
+  "hooks": [
+    {
+      "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.(ts|tsx|js|jsx|json|md)$\"",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "#!/bin/bash\n# Auto-format on edit\nif command -v prettier &> /dev/null; then\n  prettier --write \"$file_path\"\nfi\nif command -v eslint &> /dev/null; then\n  eslint --fix \"$file_path\" || true\nfi"
+        }
+      ]
+    },
+    {
+      "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.(ts|tsx|js|jsx)$\"",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "#!/bin/bash\n# Warn about console.log in production code\ngrep -n 'console\\.log' \"$file_path\" && echo '[Hook] Warning: Remove console.log before committing' >&2 || true"
+        }
+      ]
+    }
+  ]
+}
+

@@ -70,6 +70,8 @@ vibe-coding-standard-rules/
 │   │   └── console-log-warning.json # console.log警告
 │   ├── mcp-configs/                # MCPサーバー設定（テンプレート）
 │   │   └── README.md               # MCP設定の説明
+│   ├── settings-template.json      # Claude Code設定テンプレート（自動実行設定含む）
+│   ├── README.md                    # Claude Code設定の説明
 │   └── .clauderules.base           # Claude Code用のラッパーテンプレート
 ├── cursor/                         # Cursor専用設定
 │   ├── skills/                     # Cursor Skills（SKILL.md形式）
@@ -120,6 +122,7 @@ vibe-coding-standard-rules/
 * **rules/**: 常に従うルール（`~/.claude/rules/`に配置、モジュラーに分割）
 * **hooks/**: トリガーベース自動化（`~/.claude/settings.json`に追加）
 * **mcp-configs/**: MCPサーバー設定（`~/.claude.json`に追加、10個以下に抑える）
+* **settings-template.json**: Claude Code設定テンプレート（自動実行設定、hooks含む）
 
 #### **Cursor対応機能**
 * **skills/**: エージェントスキル（`.cursor/skills/`または`~/.cursor/skills/`に配置、SKILL.md形式）
@@ -128,10 +131,11 @@ vibe-coding-standard-rules/
 ### **推奨デフォルト設定**
 
 #### **Claude Code推奨設定**
-1. **MCPの有効化**: 10個以下に抑える（コンテキストウィンドウの縮小を防ぐ）
-2. **TDD中心**: RED → GREEN → REFACTORサイクル、80%以上のカバレッジを必須
-3. **エージェントのツール制限**: 必要最小限のツールのみ指定（5個程度が最適）
-4. **hooksの活用**: 編集後の自動フォーマット、console.log警告など
+1. **自動実行の有効化**: `settings-template.json`を参考に`~/.claude/settings.json`に`agent.autoExecute: true`を設定
+2. **MCPの有効化**: 10個以下に抑える（コンテキストウィンドウの縮小を防ぐ）
+3. **TDD中心**: RED → GREEN → REFACTORサイクル、80%以上のカバレッジを必須
+4. **エージェントのツール制限**: 必要最小限のツールのみ指定（5個程度が最適）
+5. **hooksの活用**: 編集後の自動フォーマット、console.log警告など
 
 #### **Cursor推奨設定**
 1. **スキルの段階的読み込み**: 必要なときにだけリソースを読み込む
@@ -996,12 +1000,26 @@ If a rule file is missing, inform the user immediately and continue with availab
 EOF
 ```
 
-#### **4. Hooksの設定（オプション）**
+#### **4. Claude Code設定ファイルの設定**
 
-`~/.claude/settings.json` にhooksを追加します。
+`~/.claude/settings.json` を作成または更新します。
+
+**推奨方法**: `settings-template.json`をコピーして使用：
+
+```bash
+# テンプレートをコピー
+cp .ai-rules/claude-code/settings-template.json ~/.claude/settings.json
+```
+
+**手動設定の場合**: 以下の設定を含めます：
 
 ```json
 {
+  "agent": {
+    "autoExecute": true,
+    "yoloMode": true,
+    "confirmBeforeExecute": false
+  },
   "hooks": [
     {
       "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.(ts|tsx|js|jsx|json|md)$\"",
@@ -1016,7 +1034,12 @@ EOF
 }
 ```
 
-詳細は `.ai-rules/claude-code/hooks/` を参照してください。
+**重要な設定項目**:
+- `agent.autoExecute: true` - コマンド実行の自動承認（確認なしで実行）
+- `agent.yoloMode: true` - Yolo Modeの有効化
+- `agent.confirmBeforeExecute: false` - 実行前の確認を無効化
+
+詳細は `.ai-rules/claude-code/README.md` および `.ai-rules/claude-code/hooks/` を参照してください。
 
 #### **5. MCP設定（オプション）**
 
