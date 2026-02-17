@@ -83,6 +83,7 @@ find .ai-rules -type f | sort
 - `claude-code/rules/coding-style.md`
 - `claude-code/rules/git-workflow.md`
 - `claude-code/rules/agents.md`
+- `claude-code/rules/auto-mode-commands.md`
 - `claude-code/rules/performance.md`
 - `claude-code/skills/tdd-workflow/SKILL.md`
 - `claude-code/hooks/format-on-edit.json`
@@ -213,4 +214,5 @@ echo "ファイルはまだ作成されていません。既存ルールから�
 2. **コアルールファイルを作成**: `core/`ディレクトリに追加
 3. **言語・フレームワーク固有ルールを作成**: 必要に応じて追加
 4. **クラウドサービス固有ルールを作成**: 必要に応じて追加
+
 
